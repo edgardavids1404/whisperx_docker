@@ -1,0 +1,6 @@
+fastapi
+PyYAML
+streamlit
+whisperx
+python-multipart
+piper-tts
