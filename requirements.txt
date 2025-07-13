@@ -1,6 +1,9 @@
 fastapi
+pydantic
 PyYAML
+Requests
 streamlit
 whisperx
 python-multipart
 piper-tts
+uvicorn
