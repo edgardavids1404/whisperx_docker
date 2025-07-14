@@ -10,7 +10,7 @@ RUN apt-get update && \
         apt-get install -y ffmpeg && \
 	apt-get install -y curl && \
 	apt-get install -y git-lfs && \
-	git lfs intall && \
+	git lfs install && \
         rm -rf /var/lib/apt/lists/*
 
 # Set working directory
