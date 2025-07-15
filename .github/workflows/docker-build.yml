@@ -40,6 +40,6 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Clean up Docker space
-          run: |
-            docker system prune -af
-            docker builder prune -af
+        run: |
+          docker system prune -af
+          docker builder prune -af
