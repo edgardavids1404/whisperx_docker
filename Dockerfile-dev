@@ -1,0 +1,3 @@
+FROM edgardavids1404/whisperx_docker:latest
+
+CMD ["bash"]
