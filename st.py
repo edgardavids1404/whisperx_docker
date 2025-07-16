@@ -12,7 +12,7 @@ uploaded_file = st.file_uploader("Upload audio/video file", type=["mp4", "mp3", 
 if uploaded_file:
     st.audio(uploaded_file, format='audio/wav')
 
-    if st.button("Run Full Pipeline"):
+    if st.button("Transcribe"):
         with st.spinner("Processing..."):
 
             # Save locally then send to FastAPI
@@ -22,7 +22,7 @@ if uploaded_file:
 
             with open(tmp_path, "rb") as f:
                 files = {"file": (uploaded_file.name, f, uploaded_file.type)}
-                r = requests.post(f"{API_BASE}/pipeline", files=files)
+                r = requests.post(f"{API_BASE}/transcribe", files=files)
 
             if r.status_code != 200:
                 st.error("Pipeline failed!")
