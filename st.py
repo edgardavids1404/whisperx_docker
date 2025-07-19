@@ -28,12 +28,31 @@ if uploaded_file:
                 st.error("Pipeline failed!")
             else:
                 res = r.json()
-                st.text_area("📝 Cleaned Text", res["cleaned_text"], height=250)
+                st.subheader("💬 Transcript by Speaker")
 
-                audio_url = f"{API_BASE}/media/{res['audio_path'].split('/')[-1]}"
-                audio_req = requests.get(audio_url)
-
-                if audio_req.status_code == 200:
-                    st.audio(audio_req.content, format="audio/wav")
+                segments = res.get("segments", [])
+                if not segments:
+                    st.warning("No segments returned.")
                 else:
-                    st.warning("Could not load generated audio.")
+                    for seg in segments:
+                        start = seg.get("start", 0)
+                        end = seg.get("end", 0)
+                        speaker = seg.get("speaker", "Unknown")
+                        text = seg.get("text", "")
+
+                        # Format timestamps
+                        start_ts = f"{int(start // 60):02}:{int(start % 60):02}"
+                        end_ts = f"{int(end // 60):02}:{int(end % 60):02}"
+
+                        st.markdown(
+                            f"**[{start_ts} - {end_ts}] {speaker}:** {text}"
+                        )
+                # st.text_area("📝 Cleaned Text", res["cleaned_text"], height=250)
+                #
+                # audio_url = f"{API_BASE}/media/{res['audio_path'].split('/')[-1]}"
+                # audio_req = requests.get(audio_url)
+                #
+                # if audio_req.status_code == 200:
+                #     st.audio(audio_req.content, format="audio/wav")
+                # else:
+                #     st.warning("Could not load generated audio.")
