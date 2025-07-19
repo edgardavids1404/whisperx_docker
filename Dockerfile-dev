@@ -1,3 +1,5 @@
 FROM edgardavids1404/whisperx_docker:latest
 
+RUN apt-get install -y python3-venv
+
 CMD ["bash"]
