@@ -1,0 +1,26 @@
+language: "fa"
+
+ollama:
+  endpoint: "http://ollamagpu:11434/api/generate"
+  endpoint2: "http://ollamagpu:11434/api/ps"
+  model: "gemma3:27b"
+
+whisperx:
+  device: "cuda"
+  compute: "float16"
+  model: "large-v3"
+  model_url: "https://huggingface.co/Systran/faster-whisper-large-v3"
+  model_name: "Systran/faster-whisper-large-v3"
+  model_dir: "./faster-whisper-large-v3/"
+  model_align_url: "https://huggingface.co/jonatasgrosman/wav2vec2-large-xlsr-53-persian"
+  model_align_name: "jonatasgrosman/wav2vec2-large-xlsr-53-persian"
+  model_align_dir: "./wav2vec2-large-xlsr-53-persian"
+  model_diarization_url: "https://huggingface.co/pyannote/speaker-diarization-3.1"
+  model_diarization_name: "pyannote/speaker-diarization-3.1"
+  model_diarization_dir: "./speaker-diarization-3.1"
+
+piper:
+  voice: "fa_IR-reza_ibrahim-medium"
+  voice_path: "/app/fa_IR-reza_ibrahim-medium.onnx"
+
+tmp_dir: "/tmp"
