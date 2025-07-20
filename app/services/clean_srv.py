@@ -1,8 +1,12 @@
-import requests, logging, json
+import logging
+
+import requests
+
 from app.utils.config_loader import get_config
 
 log = logging.getLogger(__name__)
 config = get_config()
+
 
 def clean_text(asr_text: str) -> str:
     prompt = f"""
@@ -26,8 +30,6 @@ Clean and correct the following ASR-generated text:
         "stream": False,
     }
 
-    r = requests.get(config["ollama"]["endpoint2"])
-    print(r)
     r = requests.post(config["ollama"]["endpoint"], json=payload, timeout=300)
     r.raise_for_status()
     return r.json().get("response", "").strip()
