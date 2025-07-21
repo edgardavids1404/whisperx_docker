@@ -7,13 +7,15 @@ API_BASE = "http://localhost:8502"
 
 st.set_page_config(page_title="AV Pipeline", layout="centered")
 
-st.title("🎙️ Audio/Video → Text → Cleaned Audio")
+st.title("🎙️ Audio/Video → Text → Cleaned Text → Summarization")
 
 # Session state to share transcript between tabs
 if "transcribed_text" not in st.session_state:
     st.session_state.transcribed_text = ""
+if "cleaned_text" not in st.session_state:
+    st.session_state.cleaned_text = ""
 
-tab1, tab2 = st.tabs(["🔊 Transcription", "🧹 Text Cleaner"])
+tab1, tab2, tab3 = st.tabs(["🔊 Transcription", "🧹 Text Cleaner", "📋Summarization"])
 
 # --- Tab 1: Transcription ---
 with tab1:
@@ -33,7 +35,7 @@ with tab1:
 
                 with open(tmp_path, "rb") as f:
                     files = {"file": (uploaded_file.name, f, uploaded_file.type)}
-                    r = requests.post(f"{API_BASE}/transcribe", files=files)
+                    r = requests.post(f"{API_BASE}/transcribe", files=files, timeout=1200)
 
                 if r.status_code != 200:
                     st.error("Pipeline failed!")
@@ -67,16 +69,39 @@ with tab1:
 # --- Tab 2: Text Cleaner ---
 with tab2:
     st.subheader("🧼 Clean your Text")
-    input_text = st.text_area(
+    input_text_toclean = st.text_area(
         "Input text to clean", value=st.session_state.transcribed_text, height=300
     )
 
     if st.button("Clean Text"):
         with st.spinner("Cleaning..."):
-            response = requests.post(f"{API_BASE}/clean", json={"text": input_text})
+            response = requests.post(f"{API_BASE}/clean", json={"text": input_text_toclean}, timeout=1200)
             if response.status_code == 200:
                 cleaned = response.json().get("cleaned_text", "")
+                st.session_state.cleaned_text = cleaned.strip()
                 st.subheader("✅ Cleaned Output")
                 st.text_area("Cleaned Text", value=cleaned, height=300)
             else:
                 st.error("Cleaning failed.")
+
+with tab3:
+    st.subheader("📋Summarize your Text")
+    input_text_tosummarize = st.text_area(
+        "Input text to summarize", value=st.session_state.cleaned_text, height=300
+    )
+
+    if st.button("Summarize Text"):
+        with st.spinner("Summarizing..."):
+            response = requests.post(f"{API_BASE}/summarize", json={"text": input_text_tosummarize}, timeout=1200)
+            if response.status_code == 200:
+                summarized = response.json().get("summarized_text", "")
+                st.session_state.summarized_text = summarized.strip()
+                st.subheader("✅Summarized Output")
+                st.text_area("Summarized Text", value=summarized, height=300)
+            else:
+                st.error("Summarization failed.")
+
+
+
+
+

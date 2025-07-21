@@ -50,7 +50,7 @@ def transcribe(wav_path: str) -> dict:
     # Step 5: Assign speakers
     _diarize_model = whisperx.diarize.DiarizationPipeline(
         # model_name=config["whisperx"]["model_diarization_name"],
-        use_auth_token="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",
+        use_auth_token=os.environ['HF_TOKEN'],
         device=config["whisperx"]["device"]
     )
 

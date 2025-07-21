@@ -14,7 +14,7 @@ class TextInput(BaseModel):
 
 
 @router.post("/clean")
-async def pipeline(text: TextInput):
+async def clean(text: TextInput):
     cleaned = await asyncio.get_event_loop().run_in_executor(
         None, clean_srv.clean_text, text.text
     )

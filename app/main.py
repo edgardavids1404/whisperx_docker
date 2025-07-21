@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.routers import convert, transcribe, tts, pipeline
+from app.routers import convert, transcribe, tts, clean, summarize
 from app.utils.config_loader import get_config
 
 app = FastAPI(title="AV Pipeline API")
@@ -17,4 +17,5 @@ app.mount("/media", StaticFiles(directory=get_config()["tmp_dir"]), name="static
 app.include_router(convert.router)
 app.include_router(transcribe.router)
 app.include_router(tts.router)
-app.include_router(pipeline.router)
+app.include_router(clean.router)
+app.include_router(summarize.router)
