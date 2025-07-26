@@ -7,15 +7,22 @@ API_BASE = "http://localhost:8502"
 
 st.set_page_config(page_title="AV Pipeline", layout="centered")
 
-st.title("🎙️ Audio/Video → Text → Cleaned Text → Summarization")
+st.title("🎙️ Audio/Video → Text → Cleaned Text → Summarization → Text-to-Speech")
 
 # Session state to share transcript between tabs
 if "transcribed_text" not in st.session_state:
     st.session_state.transcribed_text = ""
 if "cleaned_text" not in st.session_state:
     st.session_state.cleaned_text = ""
+if "summarized_text" not in st.session_state:
+    st.session_state.summarized_text = ""
 
-tab1, tab2, tab3 = st.tabs(["🔊 Transcription", "🧹 Text Cleaner", "📋Summarization"])
+tab1, tab2, tab3, tab4 = st.tabs([
+        "🔊 Transcription", 
+        "🧹  Text Cleaner", 
+        "📋 Summarization", 
+        "🔈  Text to Speech"
+    ])
 
 # --- Tab 1: Transcription ---
 with tab1:
@@ -84,6 +91,7 @@ with tab2:
             else:
                 st.error("Cleaning failed.")
 
+# --- Tab 3: Text Summarization ---
 with tab3:
     st.subheader("📋Summarize your Text")
     input_text_tosummarize = st.text_area(
@@ -100,6 +108,23 @@ with tab3:
                 st.text_area("Summarized Text", value=summarized, height=300)
             else:
                 st.error("Summarization failed.")
+
+# --- Tab 4: Text-to-speech ---
+with tab4:
+    st.subheader("🗣️ Convert your Text to Speech")
+
+    input_text_tospeak = st.text_area(
+        "Input text to speak", value=st.session_state.summarized_text, height=300
+    )
+
+    if st.button("Text-to-speech"):
+        with st.spinner("Speaking..."):
+            response = requests.post(f"{API_BASE}/tts", json={"text": input_text_tospeak}, timeout=1200)
+            if response.status_code == 200:
+                audio_bytes = response.content
+                st.audio(audio_bytes, format="audio/wav")
+            else:
+                st.error(f"Failed to generate speech. Status code: {response.status_code}")
 
 
 
